@@ -1,0 +1,32 @@
+Package: stanUtils
+Title: stanUtils package
+Version: 0.0.0.9006
+Date: 2016-10-25
+Author: Charles T T Edwards and D'Arcy N Webber
+Maintainer: Charles Edwards <charles.edwards@niwa.co.nz>
+Description: a collection of functions for running, saving and interrogating
+    stan models in R
+Depends:
+    reshape2,
+    ggplot2,
+    tidyr,
+    dplyr,
+    rstan,
+    methods
+License: MIT
+RoxygenNote: 5.0.1
+Collate:
+    'stanPosterior-class.R'
+    'flatten-stanPosterior.R'
+    'stanOutput-class.R'
+    'cdfplot.R'
+    'densityplot.R'
+    'histplot.R'
+    'stanPosteriors-class.R'
+    'posterior.R'
+    'utils.R'
+    'print-stanPosterior.R'
+    'stan-extract.R'
+    'stanSave.R'
+    'traceplot.R'
+    'zzz.R'
