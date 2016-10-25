@@ -7,25 +7,22 @@
 #' @importClassesFrom rstan stanfit
 #' @export
 #'
-stan_extract <- function(dir = ".", data = TRUE, map = FALSE, mcmc = FALSE, variational = FALSE, model = character(), pars = character())
+stan_extract <- function(dir = ".", data = TRUE, map = FALSE, mcmc = FALSE, variational = FALSE, model = character(), inc_model_outputs = FALSE)
 {
     current.dir <- getwd()
     setwd(dir)
     
-    # find initialisation file
-    inifile <- list.files(pattern = "[.]ini")[grepl("*", list.files(pattern = "[.]ini"))]
+    # get estimated parameter and model output specifications
+    parfile <- list.files(pattern = "[.]par")[grepl("*", list.files(pattern = "[.]par"))]
+    pars    <- rstan::read_rdump(parfile)
     
-    # by default select estimated pars for diagnostics
-    permute_FALSE <- c("lp__", names(rstan::read_rdump(inifile)))
-    
-    # opportunity to specify output pars (estimated and derived)
-    permute_TRUE <- NULL
-    if (length(pars) > 0) {
-        permute_TRUE <- pars
-    }
+    # by default select estimated parameters for diagnostics
+    permute_FALSE <- c("lp__", pars[['estimated_parameters']])
+    # and specify whether or not to include all permuted model outputs
+    permute_TRUE <- if(inc_model_outputs) pars[['model_outputs']] else permute_FALSE
     
     # initialise object
-    dS4 <- new("stanOutput", model.name = model, pars = names(rstan::read_rdump(inifile)))
+    dS4 <- new("stanOutput", model.name = model, pars = pars[['estimated_parameters']], outputs = pars[['model_outputs']])
     
     if (data) {
         
@@ -44,10 +41,8 @@ stan_extract <- function(dir = ".", data = TRUE, map = FALSE, mcmc = FALSE, vari
             
             map <- lsd::read_stan_map(mapfile)
             
-            if (!is.null(permute_TRUE))
-                permute_TRUE <- map@model_pars
-            
-            dS4@map <- rstan::extract(map, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE, include = FALSE)
+            # return list of all model outputs
+            dS4@map <- rstan::extract(map, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE)
             
         } else warning("no 'map' file")
     }
@@ -61,14 +56,11 @@ stan_extract <- function(dir = ".", data = TRUE, map = FALSE, mcmc = FALSE, vari
             # create stanfit object from mcmc outputs
             mcmc <- rstan::read_stan_csv(mcmcfiles)
             
-            if (!is.null(permute_TRUE))
-                permute_TRUE <- mcmc@model_pars
-            
-            # create list object containing all model outputs
-            dS4@mcmc[['permute_TRUE']] <- rstan::extract(mcmc, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE, include = FALSE)
+            # create list object containing model outputs
+            dS4@mcmc[['permute_TRUE']] <- rstan::extract(mcmc, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE)
             
             # extract pars (with chains) for diagnostic plots
-            mcmc <- rstan::extract(mcmc, pars = permute_FALSE, permuted = FALSE, inc_warmup = FALSE, include = TRUE)
+            mcmc <- rstan::extract(mcmc, pars = permute_FALSE, permuted = FALSE, inc_warmup = FALSE)
             dimnames(mcmc)[[1]] <- 1:dim(mcmc)[1]
             dimnames(mcmc)[[2]] <- 1:dim(mcmc)[2]
             mcmc <- plyr::adply(mcmc, 1:3)

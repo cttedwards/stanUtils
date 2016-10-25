@@ -4,7 +4,8 @@
 #' @export
 #'
 setClass("stanOutput", slots = list(
-						  pars = "character",
+						  parameters = "character",
+						  outputs = "character",
                           data = "list",            # data object or list
                           map = "list",
                           mcmc = "list",
@@ -16,7 +17,7 @@ setClass("stanOutput", slots = list(
 
 #' @export
 #' 
-setMethod("initialize", signature = "stanOutput", definition = function(.Object, model.name, pars) {
+setMethod("initialize", signature = "stanOutput", definition = function(.Object, model.name, pars, outputs) {
     
 	.Object@data <- list()
 	.Object@map  <- list()
@@ -27,8 +28,12 @@ setMethod("initialize", signature = "stanOutput", definition = function(.Object,
 	.Object@inits <- list()
 	
 	if (!missing(pars)) {
-        .Object@pars <- as.character(pars)
-    } else .Object@pars <- character()
+        .Object@parameters <- as.character(pars)
+    } else .Object@parameters <- character()
+	
+	if (!missing(outputs)) {
+	    .Object@outputs <- as.character(outputs)
+	} else .Object@outputs <- character()
 	
     if (!missing(model.name)) {
         .Object@model <- as.character(model.name)

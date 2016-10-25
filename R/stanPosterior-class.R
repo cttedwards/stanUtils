@@ -25,7 +25,7 @@ setMethod("initialize", signature = "stanPosterior", definition = function(.Obje
 #' @export
 setMethod("show", "stanPosterior",
           function(object) {
-              cat("stanPosterior for model: ", object@model, ", containing pars: ", paste0(object@pars, c(rep(', ', length(object@pars) - 1), '')), sep = '')
+              cat("stanPosterior for model: '", object@model, "' , containing pars: ", paste(object@pars, collapse = ', '))
           }
 )
 
