@@ -47,5 +47,5 @@ setMethod("initialize", signature = "stanOutput", definition = function(.Object,
 #' 
 setMethod("show", "stanOutput",
           function(object) {
-            cat("stanOutput S4 object class for model '", object@model, "'" ,sep = '') 
+            cat("stanOutput S4 object class for model '", object@model, "'" , sep = "") 
           })

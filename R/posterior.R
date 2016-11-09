@@ -50,7 +50,7 @@
                   stan.object <- file.path(path[i], paste0(models[i], ".rds"))
                   if (file.exists(stan.object)) {
                         stan.model <- readRDS(stan.object)
-                        message("loading model:", stan.model@model)
+                        message("loading model: '", stan.model@model,"'")
                         stan.list[[stan.model@model]] <- posterior(stan.model, pars)
                   }
                 }

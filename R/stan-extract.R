@@ -7,10 +7,10 @@
 #' @importClassesFrom rstan stanfit
 #' @export
 #'
-stan_extract <- function(dir = ".", data = TRUE, map = FALSE, mcmc = FALSE, variational = FALSE, model = character(), inc_model_outputs = FALSE)
+stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = FALSE, model = character(), path = ".", inc_model_outputs = FALSE)
 {
     current.dir <- getwd()
-    setwd(dir)
+    setwd(path)
     
     # get estimated parameter and model output specifications
     parfile <- list.files(pattern = "[.]par")[grepl("*", list.files(pattern = "[.]par"))]
