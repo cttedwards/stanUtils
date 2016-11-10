@@ -15,18 +15,18 @@ else
 	CD = cd
 endif
 
-all: tarball install clean
+all: install clean
 
-tarball: ../$(PKG_NAME)_$(PKG_VERSION).tar.gz
-../$(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
-	$(CD) ../ && R CMD build stanUtils
-
-install: ../$(PKG_NAME)_$(PKG_VERSION).tar.gz
-	R CMD INSTALL ../$(PKG_NAME)_$(PKG_VERSION).tar.gz
+./inst/doc/*.html: ./vignettes/*.Rmd
+	R --vanilla -e 'devtools::build_vignettes()'
+	
+install: $(PKG_FILES) ./inst/doc/*.html
+	Rcmd INSTALL --build .
 
 DESCRIPTION NAMESPACE: $(R_FILES)
 	Rscript version_update.R
 
 clean:
-	$(RM) ../$(PKG_NAME)_*.tar.gz
+	$(RM) $(PKG_NAME)_*.zip
 	$(RM) man/
+	$(RM) NAMESPACE
