@@ -1,5 +1,5 @@
 # Get Version and date
-VERSION <- scan('DESCRIPTION',what = character(),skip = 2,nlines = 1)[2]
+VERSION <- scan('DESCRIPTION',what = character(),skip = 1,nlines = 1)[2]
 DATE    <- Sys.Date()
 TIME    <- Sys.time()
 
