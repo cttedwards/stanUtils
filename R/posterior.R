@@ -12,7 +12,7 @@
 #' @rdname posterior
 #' @export
 #  method
-"posterior.stanOutput" <- function(object, pars = object@parameters) {
+"posterior.stanOutput" <- function(object, pars = unique(c(object@parameters, object@outputs))) {
               
               parnames <- names(object@mcmc[['permute_TRUE']])
               
@@ -26,7 +26,7 @@
               }
               
               if (length(pars.out) > 0) {
-                  message("no ", paste(pars.out, collapse = ", "), " in ", deparse(substitute(object)))
+                  message("no ", paste(pars.out, collapse = ", "), " in '", deparse(substitute(object)), "' model_outputs (see *.par file)")
               }
               
               return(stan.list)
@@ -38,9 +38,10 @@
     
                 if (missing(pars)) {
                     
-                    parfile <- list.files(pattern = "[.]par")[grepl("*", list.files(pattern = "[.]par"))]
-                    pars    <- rstan::read_rdump(parfile)
-                    pars    <- c("lp__", pars[['estimated_parameters']])
+                    parfiles <- list.files(pattern = "[.]par")
+                    parfiles <- parfiles[apply(vapply(models, function(x) grepl(x, parfiles), vector('logical', length(parfiles))), 2, sum)]
+                    pars    <- vapply(parfiles, function(x) rstan::read_rdump(x), vector('list', 2))
+                    pars    <- c("lp__", unique(unlist(pars)))
                     
                 }
                 

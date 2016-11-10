@@ -13,7 +13,7 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
     setwd(path)
     
     # get estimated parameter and model output specifications
-    parfile <- list.files(pattern = "[.]par")[grepl("*", list.files(pattern = "[.]par"))]
+    parfile <- list.files(pattern = "[.]par")[grepl(model, list.files(pattern = "[.]par"))]
     pars    <- rstan::read_rdump(parfile)
     
     # by default select estimated parameters for diagnostics
@@ -26,7 +26,7 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
     
     if (data) {
         
-        datfile <- list.files(pattern = "[.]dat")[grepl("*", list.files(pattern = "[.]dat"))]
+        datfile <- list.files(pattern = "[.]dat")[grepl(model, list.files(pattern = "[.]dat"))]
         
         if (length(datfile) > 0) {
             dS4@data <- rstan::read_rdump(datfile)
@@ -35,7 +35,7 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
 
     if (map) {
         
-        mapfile <- list.files(pattern = "[.]map")[grepl("*", list.files(pattern = "[.]map"))]
+        mapfile <- list.files(pattern = "[.]map")[grepl(model, list.files(pattern = "[.]map"))]
         
         if (length(mapfile) > 0) {
             
@@ -49,7 +49,7 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
     
     if (mcmc) {
         
-        mcmcfiles <- list.files(pattern = "[.]mcmc")[grepl("*", list.files(pattern = "[.]mcmc"))]
+        mcmcfiles <- list.files(pattern = "[.]mcmc")[grepl(model, list.files(pattern = "[.]mcmc"))]
         
         if (length(mcmcfiles) > 0) {
             

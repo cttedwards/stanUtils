@@ -43,14 +43,14 @@
 #' @rdname traceplot
 #' @export
 # method
-"histplot.stanOutput" <- function(object, pars, bins = 20) {
+"histplot.stanOutput" <- function(object, pars = object@parameters, bins = 20) {
     
     dfr <- object@mcmc[['permute_FALSE']]
     dfr <- dfr %>% dplyr::filter(startsWith(as.character(par), pars))
     
     gg <- ggplot(dfr) + 
         geom_histogram(aes(x = value, fill = chain), bins = bins) +
-        facet_wrap(~label, scales = "free") +
+        facet_wrap(~par, scales = "free") +
         labs(x = "Value", y = NULL, fill = "Chain")
     
     return(gg)

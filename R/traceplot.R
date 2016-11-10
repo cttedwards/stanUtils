@@ -41,7 +41,7 @@
 #' @rdname traceplot
 #' @export
 # method
-"traceplot.stanOutput" <- function(object, pars) {
+"traceplot.stanOutput" <- function(object, pars = object@parameters) {
     
     dfr <- object@mcmc[['permute_FALSE']]
     dfr <- dfr %>% dplyr::filter(startsWith(as.character(par), pars))
