@@ -1,3 +1,3 @@
 # stanUtils
 ===================
-A collection of functions for running, saving and interrogating stan models in R
+A collection of functions for running, saving and interrogating cmdStan models in R
