@@ -3,11 +3,11 @@
 #' 
 #' @param model a name or label for the model being extracted
 #' @include stanOutput-class.R
-#' @importFrom lsd read_stan_map
+#' @importFrom rstan extract read_stan_csv
 #' @importClassesFrom rstan stanfit
 #' @export
 #'
-stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = FALSE, model = character(), path = ".", inc_model_outputs = FALSE)
+stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = FALSE, model = character(), mcmc_files = "all", path = ".", inc_model_outputs = FALSE)
 {
     current.dir <- getwd()
     setwd(path)
@@ -17,12 +17,12 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
     pars    <- rstan::read_rdump(parfile)
     
     # by default select estimated parameters for diagnostics
-    permute_FALSE <- c("lp__", pars[['estimated_parameters']])
+    permute_FALSE <- unique(c("lp__", pars[['estimated_parameters']]))
     # and specify whether or not to include all permuted model outputs
-    permute_TRUE <- if(inc_model_outputs) pars[['model_outputs']] else permute_FALSE
+    permute_TRUE <- if(inc_model_outputs) unique(c(pars[['estimated_parameters']], pars[['model_outputs']])) else pars[['estimated_parameters']]
     
     # initialise object
-    dS4 <- new("stanOutput", model.name = model, pars = pars[['estimated_parameters']], outputs = pars[['model_outputs']])
+    dS4 <- new("stanOutput", model.name = model, pars = permute_FALSE, outputs = permute_TRUE)
     
     if (data) {
         
@@ -35,14 +35,11 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
 
     if (map) {
         
-        mapfile <- list.files(pattern = "[.]map")[grepl(model, list.files(pattern = "[.]map"))]
+        mapfiles <- list.files(pattern = "[.]map")[grepl(model, list.files(pattern = "[.]map"))]
         
-        if (length(mapfile) > 0) {
+        if (length(mapfiles) > 0) {
             
-            map <- lsd::read_stan_map(mapfile)
-            
-            # return list of all model outputs
-            dS4@map <- rstan::extract(map, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE)
+            dS4@map <- read_stan_map(mapfiles)
             
         } else warning("no 'map' file")
     }
@@ -50,6 +47,10 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
     if (mcmc) {
         
         mcmcfiles <- list.files(pattern = "[.]mcmc")[grepl(model, list.files(pattern = "[.]mcmc"))]
+        
+        if (!all(mcmc_files == "all")) {
+            mcmcfiles <- mcmcfiles[mcmcfiles %in% mcmc_files]
+        } 
         
         if (length(mcmcfiles) > 0) {
             

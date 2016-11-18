@@ -15,6 +15,7 @@ stan_restart <- function(path = ".")
     
     # get estimated parameter and model output specifications
     parfile <- list.files(pattern = "[.]par")[grepl("*", list.files(pattern = "[.]par"))]
+    stopifnot(length(parfile) > 0)
     pars    <- rstan::read_rdump(parfile)
     pars    <- pars[['estimated_parameters']]
     
