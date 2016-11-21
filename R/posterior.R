@@ -14,7 +14,7 @@
 #  method
 "posterior.stanOutput" <- function(object, pars = unique(c(object@parameters, object@outputs))) {
               
-              parnames <- names(object@mcmc[['permute_TRUE']])
+              parnames <- names(object@mcmc[['outputs']])
               
               pars.in  <- pars[pars %in% parnames]
               pars.out <- pars[!(pars %in% parnames)]
@@ -22,7 +22,7 @@
               stan.list <- new("stanPosterior", pars.in, object@model)
               
               for (i in 1:length(pars.in)) {
-                stan.list[[pars.in[i]]] <- object@mcmc[['permute_TRUE']][[pars.in[i]]]
+                stan.list[[pars.in[i]]] <- object@mcmc[['outputs']][[pars.in[i]]]
               }
               
               if (length(pars.out) > 0) {

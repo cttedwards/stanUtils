@@ -122,7 +122,6 @@ read_stan_map <- function(csvfiles) {
   samples <- lapply(ss_lst, 
                     function(df) {
                       ss <- df[c(paridx, lp__idx)[midx]]
-                      #attr(ss, "sampler_params") <- df[setdiff(attr(paridx, 'meta'), lp__idx)] 
                       ss
                     })
   par_fnames <- par_fnames[midx]
