@@ -64,6 +64,9 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
             dS4@map[['parameters']] <- lapply(permute_FALSE, function(x) return(map$sims[[x]]))
             dS4@map[['outputs']]    <- lapply(permute_TRUE,  function(x) return(map$sims[[x]]))
             
+            names(dS4@map[['parameters']]) <- permute_FALSE
+            names(dS4@map[['outputs']]) <- permute_TRUE
+            
         } else warning("no 'map' file")
     }
     

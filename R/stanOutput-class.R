@@ -40,7 +40,7 @@ setMethod("initialize", signature = "stanOutput", definition = function(.Object,
 	.Object@variational <- list()
 	.Object@inits <- list()
 	
-	if (!missing(pars)) {
+	if (!missing(parameters)) {
         .Object@parameters <- as.character(parameters)
     } else .Object@parameters <- character()
 	
