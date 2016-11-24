@@ -35,7 +35,7 @@ setMethod("initialize", signature = "stanOutput", definition = function(.Object,
 	.Object@data <- list()
 	.Object@map  <- list()
 	.Object@mcmc <- list()
-	.Object@mcmc[['parameters']] <- data.frame()
+	.Object@mcmc[['parameters']] <- list()
 	.Object@mcmc[['outputs']]    <- list()
 	.Object@variational <- list()
 	.Object@inits <- list()
