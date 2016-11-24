@@ -1,7 +1,12 @@
 #'
-#' Extract model fits and load into stanOutput object class for plotting
+#' Extract model fits and load into stanOutput object class
 #' 
 #' @param model a name or label for the model being extracted
+#' @param data read data into object?
+#' @param mcmc read mcmc chains into object?
+#' @param map read map results into object?
+#' @param map read variational results into object?
+#' 
 #' @include stanOutput-class.R
 #' @importFrom rstan extract read_stan_csv
 #' @importClassesFrom rstan stanfit
@@ -84,15 +89,20 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
             mcmc <- rstan::read_stan_csv(mcmcfiles)
             
             # create list object containing model outputs
-            dS4@mcmc[['outputs']] <- rstan::extract(mcmc, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE)
+            if (!is.null(permute_TRUE))
+                dS4@mcmc[['outputs']] <- rstan::extract(mcmc, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE)
             
             # extract pars (with chains) for diagnostic plots
             mcmc <- rstan::extract(mcmc, pars = permute_FALSE, permuted = FALSE, inc_warmup = FALSE)
             dimnames(mcmc)[[1]] <- 1:dim(mcmc)[1]
-            dimnames(mcmc)[[2]] <- 1:dim(mcmc)[2]
-            mcmc <- plyr::adply(mcmc, 1:3)
-            colnames(mcmc) <- c('iteration', 'chain', 'par', 'value')
-            dS4@mcmc[['parameters']] <- mcmc
+            if (length(mcmcfiles) > 1) dimnames(mcmc)[[2]] <- 1:dim(mcmc)[2]
+            
+            dS4@mcmc[['parameters']] <- lapply(permute_FALSE, function(x) mcmc[,,regexpr(x, dimnames(mcmc)[[3]]) > 0])
+            names(dS4@mcmc[['parameters']]) <- permute_FALSE
+            
+            #mcmc <- plyr::adply(mcmc, 1:3)
+            #colnames(mcmc) <- c('iteration', 'chain', 'par', 'value')
+            #dS4@mcmc[['parameters']] <- mcmc
             
         } else warning("no 'mcmc' files")
     }
