@@ -29,4 +29,3 @@ DESCRIPTION NAMESPACE: $(R_FILES)
 clean:
 	$(RM) $(PKG_NAME)_*.zip
 	$(RM) man/
-	$(RM) NAMESPACE
