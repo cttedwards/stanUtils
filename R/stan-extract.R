@@ -39,11 +39,6 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
         } else stop("no 'par' file")
     }
     
-    # by default select estimated parameters for diagnostics
-    #permute_FALSE <- unique(c("lp__", pars[['estimated_parameters']]))
-    # and specify whether or not to include all permuted model outputs
-    #permute_TRUE <- if(inc_model_outputs) unique(c(pars[['estimated_parameters']], pars[['model_outputs']])) else pars[['estimated_parameters']]
-    
     # initialise object
     dS4 <- new("stanOutput", model.name = model, parameters = permute_FALSE, outputs = permute_TRUE)
     
@@ -99,10 +94,6 @@ stan_extract <- function(data = TRUE, map = FALSE, mcmc = FALSE, variational = F
             
             dS4@mcmc[['parameters']] <- lapply(permute_FALSE, function(x) mcmc[,,regexpr(x, dimnames(mcmc)[[3]]) > 0])
             names(dS4@mcmc[['parameters']]) <- permute_FALSE
-            
-            #mcmc <- plyr::adply(mcmc, 1:3)
-            #colnames(mcmc) <- c('iteration', 'chain', 'par', 'value')
-            #dS4@mcmc[['parameters']] <- mcmc
             
         } else warning("no 'mcmc' files")
     }

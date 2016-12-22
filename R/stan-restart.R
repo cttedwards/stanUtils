@@ -11,7 +11,6 @@
 # generic function
 "restart" <- function(object, ...) UseMethod("restart")
 #' @export
-#'
 "restart.stanOutput" <- function(object)
 {
     

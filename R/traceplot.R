@@ -43,11 +43,15 @@
 # method
 "traceplot.stanOutput" <- function(object, pars = object@parameters) {
     
-    dfr <- object@mcmc[['permute_FALSE']]
-    dfr <- dfr %>% dplyr::filter(startsWith(as.character(par), pars))
+    mcmc <- object@mcmc[['parameters']]
+    mcmc <- lapply(mcmc, melt)
+    
+    dfr  <- plyr::ldply(mcmc)
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(.id), pars))
     
     gg <- ggplot(dfr) + 
-        geom_line(aes(as.integer(iteration), value, col = chain)) + facet_wrap(~par, scales = "free_y") +
+        geom_line(aes(as.integer(iterations), value, col = as.factor(chains))) + facet_wrap(~.id, scales = "free_y") +
         labs(x = "Iteration", y = NULL, col = "Chain")
     
     return(gg)

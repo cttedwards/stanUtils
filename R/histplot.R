@@ -45,12 +45,16 @@
 # method
 "histplot.stanOutput" <- function(object, pars = object@parameters, bins = 20) {
     
-    dfr <- object@mcmc[['permute_FALSE']]
-    dfr <- dfr %>% dplyr::filter(startsWith(as.character(par), pars))
+    mcmc <- object@mcmc[['parameters']]
+    mcmc <- lapply(mcmc, melt)
+    
+    dfr  <- plyr::ldply(mcmc)
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(.id), pars))
     
     gg <- ggplot(dfr) + 
-        geom_histogram(aes(x = value, fill = chain), bins = bins) +
-        facet_wrap(~par, scales = "free") +
+        geom_histogram(aes(x = value, fill = as.factor(chains)), bins = bins) +
+        facet_wrap(~.id, scales = "free") +
         labs(x = "Value", y = NULL, fill = "Chain")
     
     return(gg)
