@@ -17,5 +17,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-#
+# R package files
+man/*.Rd
 *.zip
