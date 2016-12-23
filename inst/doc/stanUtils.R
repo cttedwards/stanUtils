@@ -37,6 +37,7 @@ cat("mcmc:\n", file = "Makefile", append = TRUE)
 cat("	./$(NAME).exe sample algorithm=hmc num_samples=1000 num_warmup=1000 thin=1 init=$(NAME).ini data file=$(NAME).dat output file=$(NAME)$(chain).mcmc\n", file = "Makefile", append = TRUE)
 cat("	$(RM) .RData\n", file = "Makefile", append = TRUE)
 
+## ------------------------------------------------------------------------
 # build the model from the command line
 system("make build NAME=modelA")
 system("make build NAME=modelB")
@@ -50,27 +51,33 @@ system("make mcmc NAME=modelB chain=2")
 ## ---- echo = TRUE--------------------------------------------------------
 # extract and save mcmc outputs as *.rds file
 (outA <- stan_extract(data = TRUE, mcmc = TRUE, model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
-stanUtils::stanSave(outA)
+stanSave(outA)
 
 (outB <- stan_extract(data = TRUE, mcmc = TRUE, model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "mse")))
-stanUtils::stanSave(outB)
+stanSave(outB)
 
+
+## ------------------------------------------------------------------------
+slotNames(outA)
 
 ## ------------------------------------------------------------------------
 # examine multiple chains in stanOutput object
 traceplot(outA)
 histplot(outA)
 
+## ------------------------------------------------------------------------
 # examine permutted chains
 (outpostA <- posterior(outA))
 traceplot(outpostA)
 histplot(outpostA)
+print(outpostA)
 
 ## ------------------------------------------------------------------------
 # examine permutted chains
 (outpostAB <- posterior(models = c("modelA", "modelB"), pars = c("mu")))
-traceplot(outpostAB)
-histplot(outpostAB)
+traceplot(outpostAB, pars = c("mu"))
+histplot(outpostAB, pars = c("mu"))
+print(outpostAB)
 
 ## ---- echo = FALSE, results = 'hide'-------------------------------------
 files <- list.files(pattern = "[.]par");  file.remove(files)
@@ -80,5 +87,6 @@ files <- list.files(pattern = "[.]stan"); file.remove(files)
 files <- list.files(pattern = "[.]exe");  file.remove(files)
 files <- list.files(pattern = "[.]rds");  file.remove(files)
 files <- list.files(pattern = "[.]mcmc"); file.remove(files)
+file.remove("USER_HEADER.hpp")
 file.remove("Makefile")
 

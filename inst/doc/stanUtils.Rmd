@@ -16,13 +16,15 @@ vignette: >
 knitr::opts_chunk$set(tidy = TRUE, tidy.opts = list(blank = TRUE, width.cutoff = 75), message = FALSE, warning = FALSE, collapse = TRUE, comment = "#>")
 ```
 
-First ensure that `cmdStan` is installed on your computer.
+This package is designed to make it easier to run and interrogate models using `cmdStan`, and the steps involved are detailed here. First ensure that `cmdStan` is installed on your computer, and then load the `stanUtils` package.
 
 ```{r, results='hide'}
 library(stanUtils)
 ```
 
-# Set up
+## Set up
+
+Write the stan model code, data file, initial value file and (if desired) a make file
 
 ```{r}
 # write example models
@@ -56,7 +58,11 @@ cat("\n", file = "Makefile", append = TRUE)
 cat("mcmc:\n", file = "Makefile", append = TRUE)
 cat("	./$(NAME).exe sample algorithm=hmc num_samples=1000 num_warmup=1000 thin=1 init=$(NAME).ini data file=$(NAME).dat output file=$(NAME)$(chain).mcmc\n", file = "Makefile", append = TRUE)
 cat("	$(RM) .RData\n", file = "Makefile", append = TRUE)
+```
 
+Build and run the model or models from the command line.
+
+```{r}
 # build the model from the command line
 system("make build NAME=modelA")
 system("make build NAME=modelB")
@@ -68,44 +74,56 @@ system("make mcmc NAME=modelB chain=1")
 system("make mcmc NAME=modelB chain=2")
 ```
 
-# Save model parameters and outputs
+## Save model parameters and outputs
 
-Parameters are kept as separate chains, whilst outputs are permutted.
+For each model, extract the MCMC outputs into a `stanOuput` object using `stan_extract`, specifiying whether to treat the outputs as `parameters` (for which chain identities are retained) or `outputs` (for which the chains are permutted and combined). The specification of `parameters` and `outputs` can overlap, depending on downstream analyses. This flexibility is designed to keep the `stanOutput` object small, particularly for large model applications.
+
+A call to `stanSave` will save the `stanOutput` object using `base::saveRDS`, with a file name that matches the model name. 
 
 ```{r, echo = TRUE}
 # extract and save mcmc outputs as *.rds file
 (outA <- stan_extract(data = TRUE, mcmc = TRUE, model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
-stanUtils::stanSave(outA)
+stanSave(outA)
 
 (outB <- stan_extract(data = TRUE, mcmc = TRUE, model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "mse")))
-stanUtils::stanSave(outB)
+stanSave(outB)
 
 ```
+The `stanOuput` class object contains a variety of slots that are populated during a call to `stan_extract`:
+```{r}
+slotNames(outA)
+```
+In the current example, because it is of primary interest to users of `cmdStan`, we are concerned only with Bayesian outputs stored in `<object>@mcmc`.
 
-# Interrogate single model
+## Interrogate single model
 
-Dianostic plots can be called directly to plot parameters. Alternatively the `posterior` function can be used to extract permutted chains for the outputs.
+For each model, produce diagnostic plots through calls to `traceplot` and `histplot` which will plot `parameters`, keeping chains separate.
 
 ```{r}
 # examine multiple chains in stanOutput object
 traceplot(outA)
 histplot(outA)
+```
 
+Alternatively, extract a posterior sample through a call to `posterior` which will extract the permutted chains for the specificed model `outputs` (provided they are stored in the `stanOutput` object). By default all `outputs` are extracted. These can be plotted, as well as printed.
+```{r}
 # examine permutted chains
 (outpostA <- posterior(outA))
 traceplot(outpostA)
 histplot(outpostA)
+print(outpostA)
 ```
 
-# Interrogate multiple models
+## Interrogate multiple models
 
-The `posterior` function can also be used to combined outputs from multple models.
+The `posterior` function, when provided with a character vector of model names, can also be used to combined outputs from multple models. In this case the `pars` argument must be specified. These can then also be plotted or printed for model comparison purposes.
 
 ```{r}
 # examine permutted chains
 (outpostAB <- posterior(models = c("modelA", "modelB"), pars = c("mu")))
-traceplot(outpostAB)
-histplot(outpostAB)
+traceplot(outpostAB, pars = c("mu"))
+histplot(outpostAB, pars = c("mu"))
+print(outpostAB)
 ```
 
 
@@ -117,5 +135,6 @@ files <- list.files(pattern = "[.]stan"); file.remove(files)
 files <- list.files(pattern = "[.]exe");  file.remove(files)
 files <- list.files(pattern = "[.]rds");  file.remove(files)
 files <- list.files(pattern = "[.]mcmc"); file.remove(files)
+file.remove("USER_HEADER.hpp")
 file.remove("Makefile")
 ```

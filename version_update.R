@@ -8,8 +8,8 @@ VERSION <- paste(substr(VERSION, start = 1, stop = 6), as.numeric(substr(VERSION
 
 # update DESCRIPTION
 DESCRIPTION    <- readLines('DESCRIPTION')
-DESCRIPTION[3] <- paste('Version:', VERSION)
-DESCRIPTION[4] <- paste('Date:', DATE)
+DESCRIPTION[2] <- paste('Version:', VERSION)
+DESCRIPTION[3] <- paste('Date:', DATE)
 writeLines(DESCRIPTION, 'DESCRIPTION')
 rm(DESCRIPTION)
 
