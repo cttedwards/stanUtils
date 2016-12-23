@@ -11,9 +11,13 @@
 #' @rdname traceplot
 #' @export
 # method
-"traceplot.stanPosterior" <- function(object) {
+"traceplot.stanPosterior" <- function(object, pars = names(object)) {
+    
+    message("plotting model outputs")
     
     dfr <- flatten(object)
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(label), pars))
     
     gg <- ggplot(dfr) + 
         geom_line(aes(as.integer(iterations), value)) + facet_wrap(~label, scales = "free_y") +
@@ -25,11 +29,17 @@
 #' @rdname traceplot
 #' @export
 # method
-"traceplot.stanPosteriors" <- function(object) {
+"traceplot.stanPosteriors" <- function(object, pars) {
+    
+    if (missing(pars)) stop("must specify pars")
+    
+    message("plotting comparative model outputs")
     
     dfr <- data.frame()
     for (i in 1:length(object))
         dfr <- rbind(dfr, data.frame(flatten(object[[i]]), model = names(object)[i]))
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(label), pars))
     
     gg <- ggplot(dfr) + 
         geom_line(aes(as.integer(iterations), value, col = model)) + facet_wrap(~label, scales = "free_y") +
@@ -42,6 +52,8 @@
 #' @export
 # method
 "traceplot.stanOutput" <- function(object, pars = object@parameters) {
+    
+    message("plotting estimated parameters")
     
     mcmc <- object@mcmc[['parameters']]
     mcmc <- lapply(mcmc, melt)

@@ -2,18 +2,22 @@
 #' Density plot function
 #' 
 #' Plots posterior densities for \code{stanOutput} (all estimated parameters with chains), \code{stanPosterior} 
-#' (all parameters in object) and \code{stanPosteriors} (all parameters with alternate models) objects.
+#' (all outputs in object) and \code{stanPosteriors} (all outputs from alternate models) objects.
 #'
 #' @include stanOutput-class.R stanPosterior-class.R flatten-stanPosterior.R
 #' @export
 # generic function
 "histplot" <- function(x, ...) UseMethod("histplot")
-#' @rdname traceplot
+#' @rdname histplot
 #' @export
 # method
-"histplot.stanPosterior" <- function(object, bins = 20) {
+"histplot.stanPosterior" <- function(object, pars = names(object), bins = 20) {
+    
+    message("plotting model outputs")
     
     dfr <- flatten(object)
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(label), pars))
     
     gg <- ggplot(dfr) + 
         geom_histogram(aes(x = value), bins = bins) +
@@ -23,14 +27,20 @@
     return(gg)
     
 }
-#' @rdname traceplot
+#' @rdname histplot
 #' @export
 # method
-"histplot.stanPosteriors" <- function(object, bins = 20) {
+"histplot.stanPosteriors" <- function(object, pars, bins = 20) {
+    
+    if (missing(pars)) stop("must specify pars")
+        
+    message("plotting comparative model outputs")
     
     dfr <- data.frame()
     for (i in 1:length(object))
         dfr <- rbind(dfr, data.frame(flatten(object[[i]]), model = names(object)[i]))
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(label), pars))
     
     gg <- ggplot(dfr) + 
         geom_histogram(aes(x = value, fill = model), bins = bins) +
@@ -40,10 +50,12 @@
     return(gg)
     
 }
-#' @rdname traceplot
+#' @rdname histplot
 #' @export
 # method
 "histplot.stanOutput" <- function(object, pars = object@parameters, bins = 20) {
+    
+    message("plotting estimated parameters")
     
     mcmc <- object@mcmc[['parameters']]
     mcmc <- lapply(mcmc, melt)
