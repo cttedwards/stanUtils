@@ -19,4 +19,5 @@ $RECYCLE.BIN/
 
 # R package files
 man/*.Rd
+vignettes/figure/*.png
 *.zip
