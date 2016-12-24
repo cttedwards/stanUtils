@@ -28,6 +28,10 @@ build: $(PKG_FILES)
 	Rcmd INSTALL --build .
 	R --vanilla -e 'devtools::build_vignettes()'
 	Rcmd INSTALL --build .
+	
+quickbuild: $(PKG_FILES)
+	Rscript version_update.R
+	Rcmd INSTALL --build .
 
 #DESCRIPTION NAMESPACE: $(R_FILES)
 #	Rscript version_update.R
