@@ -60,10 +60,13 @@
     
     dfr  <- plyr::ldply(mcmc)
     
+    if(!("chains" %in% colnames(dfr)))
+        dfr$chains <- 1
+    
     dfr <- dfr %>% dplyr::filter(startsWith(as.character(.id), pars))
     
     gg <- ggplot(dfr) + 
-        geom_line(aes(as.integer(iterations), value, col = as.factor(chains))) + facet_wrap(~.id, scales = "free_y") +
+        geom_line(aes(as.integer(iterations), value, col = as.factor(chains))) + facet_wrap(~parameters, scales = "free_y") +
         labs(x = "Iteration", y = NULL, col = "Chain")
     
     return(gg)

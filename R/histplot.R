@@ -62,11 +62,14 @@
     
     dfr  <- plyr::ldply(mcmc)
     
+    if(!("chains" %in% colnames(dfr)))
+        dfr$chains <- 1
+    
     dfr <- dfr %>% dplyr::filter(startsWith(as.character(.id), pars))
     
     gg <- ggplot(dfr) + 
         geom_histogram(aes(x = value, fill = as.factor(chains)), bins = bins) +
-        facet_wrap(~.id, scales = "free") +
+        facet_wrap(~parameters, scales = "free") +
         labs(x = "Value", y = NULL, fill = "Chain")
     
     return(gg)
