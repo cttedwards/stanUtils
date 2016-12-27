@@ -57,11 +57,24 @@
     
     mcmc <- object@mcmc[['parameters']]
     mcmc <- lapply(mcmc, melt)
+    mcmc <- lapply(mcmc, function(x) {
+        if(!("chains" %in% colnames(x))) x$chains <- 1
+        if(!("iterations" %in% colnames(x))) x$iterations <- 1:nrow(x)
+        x
+        })
     
     dfr  <- plyr::ldply(mcmc)
     
-    if(!("chains" %in% colnames(dfr)))
-        dfr$chains <- 1
+    dfr$chains     <- as.character(dfr$chains)
+    dfr$iterations <- as.integer(dfr$iterations)
+    dfr$.id        <- as.character(dfr$.id)
+    
+    if("parameters" %in% colnames(dfr)) {
+        dfr$parameters <- as.character(dfr$parameters)
+        dfr$parameters[is.na(dfr$parameters)] <- dfr$.id[is.na(dfr$parameters)]
+    } else {
+        dfr$parameters <- dfr$.id
+    }
     
     dfr <- dfr %>% dplyr::filter(startsWith(as.character(.id), pars))
     
