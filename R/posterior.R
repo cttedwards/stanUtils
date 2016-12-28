@@ -19,7 +19,8 @@
               pars.in  <- pars[pars %in% parnames]
               pars.out <- pars[!(pars %in% parnames)]
               
-              if (length(pars.out) > 0) warning("dropped", pars.out)
+              if (!(length(pars.in) > 0)) stop("specified pars not contained in model outputs")
+              if (length(pars.out) > 0) warning("dropped: ", paste(pars.out, collapse = ', '))
               
               stan.list <- new("stanPosterior", pars.in, object@model)
               
