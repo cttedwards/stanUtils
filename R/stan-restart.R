@@ -1,9 +1,9 @@
 #'
-#' Extract permuted posterior sample from mcmc chain
+#' Extract terminal posterior sample from mcmc chain(s)
 #' 
 #' This can be used for restarting another chain
 #' 
-#' @param object \code{stanOutput} class object containing MCMC samples
+#' @param object \code{stanOutput} class object containing MCMC samples stored in \code{object@mcmc[['parameters']]}.
 #' 
 #' @importClassesFrom rstan stanfit
 #' 
@@ -16,6 +16,6 @@
     
     mcmc <- object@mcmc[['parameters']]
     
-    return(lapply(mcmc, function(x) { d <- as.character(length(dim(x))); switch(d, "2" = x[dim(x)[1],], "3" = x[dim(x)[1],,])} ))
+    return(lapply(mcmc, function(x) { d <- as.character(length(dim(x))); switch(d, "0" = x[length(x)], "2" = x[dim(x)[1],], "3" = x[dim(x)[1],,])} ))
     
 }
