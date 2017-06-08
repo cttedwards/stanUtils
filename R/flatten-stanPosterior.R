@@ -23,6 +23,9 @@
     # merge into single data.frame
     dfr <- plyr::ldply(lst)
     
+	# add class attribute
+	class(dfr) <- c("data.frame", "stan.data.frame")
+	
     # return flattened data.frame
     return(dfr)
     
@@ -54,7 +57,7 @@
     # tidy up
     dfr <- dfr[, c('iterations', 'value', 'label')]
     dfr$iterations <- as.integer(dfr$iterations)
-    
+	
     # return flattened data.frame
     return(dfr)
     

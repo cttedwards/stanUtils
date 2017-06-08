@@ -11,6 +11,27 @@
 #' @rdname traceplot
 #' @export
 # method
+"traceplot.data.frame" <- function(object, pars = names(object)) {
+    
+	# check that data.frame was created from a flattened
+	# stanPosterior object
+	stopifnot("stan.data.frame" %in% class(object))
+	
+    message("plotting model outputs")
+    
+    dfr <- dfr %>% dplyr::filter(startsWith(as.character(label), pars))
+    
+    gg <- ggplot(dfr) + 
+        geom_line(aes(as.integer(iterations), value)) + facet_wrap(~label, scales = "free_y") +
+        labs(x = "Iteration", y = NULL)
+    
+    return(gg)
+    
+}
+
+#' @rdname traceplot
+#' @export
+# method
 "traceplot.stanPosterior" <- function(object, pars = names(object)) {
     
     message("plotting model outputs")

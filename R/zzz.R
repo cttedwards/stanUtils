@@ -1,4 +1,4 @@
 .onAttach <- function(libname, pkgname)
 {
-    packageStartupMessage("stanUtils beta version 0.0.0.9034 (2017-05-08 09:35:51)")
+    packageStartupMessage("stanUtils beta version 0.0.0.9035 (2017-06-08 15:22:04)")
 }
