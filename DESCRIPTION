@@ -1,6 +1,6 @@
 Package: stanUtils
-Version: 0.0.0.9035
-Date: 2017-06-08
+Version: 0.0.0.9052
+Date: 2017-09-21
 Description: a collection of functions for running, saving and interrogating
     stan models in R
 VignetteBuilder: knitr
@@ -13,8 +13,8 @@ Depends:
     dplyr,
     methods
 License: MIT
-RoxygenNote: 5.0.1
-Collate:
+RoxygenNote: 6.0.1
+Collate: 
     'stanPosterior-class.R'
     'flatten-stanPosterior.R'
     'stanOutput-class.R'
