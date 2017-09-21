@@ -74,7 +74,7 @@
 # method
 "traceplot.stanOutput" <- function(object, pars = object@parameters) {
     
-	if (pars %in% object@parameters) stop("specified pars not contained in object parameters slot")
+	stopifnot(pars %in% object@parameters)
 	
     message("plotting estimated parameters")
     

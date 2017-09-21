@@ -38,12 +38,7 @@
                 if (missing(pars)) {
                     
                     stop("must specify pars")
-                    
-                    #parfiles <- list.files(pattern = "[.]par")
-                    #parfiles <- parfiles[apply(vapply(models, function(x) grepl(x, parfiles), vector('logical', length(parfiles))), 2, sum)]
-                    #pars    <- vapply(parfiles, function(x) rstan::read_rdump(x), vector('list', 2))
-                    #pars    <- c("lp__", unique(unlist(pars)))
-                    
+                     
                 }
                 
                 stan.list <- new("stanPosteriors", pars, models)

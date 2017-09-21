@@ -55,6 +55,8 @@
 # method
 "histplot.stanOutput" <- function(object, pars = object@parameters, bins = 20) {
     
+    stopifnot(pars %in% object@parameters)
+    
     message("plotting estimated parameters")
     
     mcmc <- object@mcmc[['parameters']]

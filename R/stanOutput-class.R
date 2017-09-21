@@ -22,7 +22,7 @@ setClass("stanOutput", slots = list(
                           data = "list",            # data object or list
                           map = "list",
                           mcmc = "list",
-                          variational = "list",
+                          #variational = "list",
                           inits = "list",           # initial values populated by initialisation function
                           model = "character"         # optional label for this particular run
                       )
@@ -37,7 +37,7 @@ setMethod("initialize", signature = "stanOutput", definition = function(.Object,
 	.Object@mcmc <- list()
 	.Object@mcmc[['parameters']] <- list()
 	.Object@mcmc[['outputs']]    <- list()
-	.Object@variational <- list()
+	#.Object@variational <- list()
 	.Object@inits <- list()
 	
 	if (!missing(parameters)) {

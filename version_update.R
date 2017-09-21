@@ -22,4 +22,4 @@ cat("}\n", file = filename, append = TRUE)
 rm(filename)
 
 # Write NAMESPACE
-roxygen2::roxygenize(".")
+devtools::document()

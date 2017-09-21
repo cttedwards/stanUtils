@@ -15,27 +15,20 @@ else
 	CD = cd
 endif
 
-#all: install clean
+all: install clean
 
-#./inst/doc/*.html: ./vignettes/*.Rmd
-#	R --vanilla -e 'devtools::build_vignettes()'
+./inst/doc/*.html: ./vignettes/*.Rmd
+	Rcmd INSTALL --build .
+	Rscript -e "library(devtools); build_vignettes()"
 	
-#install: $(PKG_FILES) ./inst/doc/*.html
-#	Rcmd INSTALL --build .
+install: $(PKG_FILES) ./inst/doc/*.html
+	Rcmd build --no-build-vignettes .
+	Rcmd INSTALL --html .
 	
-build: $(PKG_FILES)
+DESCRIPTION NAMESPACE: $(R_FILES)
 	Rscript version_update.R
-	Rcmd INSTALL --build .
-	R --vanilla -e 'devtools::build_vignettes()'
-	Rcmd INSTALL --build .
-	
-quickbuild: $(PKG_FILES)
-	Rscript version_update.R
-	Rcmd INSTALL --build .
-
-#DESCRIPTION NAMESPACE: $(R_FILES)
-#	Rscript version_update.R
 
 clean:
 	$(RM) $(PKG_NAME)_*.zip
+	$(RM) $(PKG_NAME)_*.tar.gz
 	$(RM) man/

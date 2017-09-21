@@ -1,5 +1,5 @@
 ## ---- echo = FALSE-------------------------------------------------------
-knitr::opts_chunk$set(tidy = TRUE, tidy.opts = list(blank = TRUE, width.cutoff = 75), message = FALSE, warning = FALSE, collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(tidy = TRUE, tidy.opts = list(blank = TRUE, width.cutoff = 75), message = FALSE, warning = FALSE, collapse = TRUE, comment = "# >")
 
 ## ---- results='hide'-----------------------------------------------------
 library(stanUtils)
@@ -26,7 +26,7 @@ rstan::stan_rdump(list = ls(dat), file = "modelB.dat",  envir = list2env(dat))
 
 # create simple makefile
 cat("SRC_FILE=$(NAME).stan\n", file = "Makefile")
-cat("MODEL_HOME=H:/CODE/packages/stanUtils/vignettes\n", file = "Makefile", append = TRUE)
+cat("MODEL_HOME=C:/Rpackages/stanUtils/vignettes\n", file = "Makefile", append = TRUE)
 cat("CMDSTAN_HOME=C:/cmdstan\n", file = "Makefile", append = TRUE)
 cat("\n", file = "Makefile", append = TRUE)
 cat("build: $(SRC_FILE)\n", file = "Makefile", append = TRUE)
@@ -50,10 +50,10 @@ system("make mcmc NAME=modelB chain=2")
 
 ## ---- echo = TRUE--------------------------------------------------------
 # extract and save mcmc outputs as *.rds file
-(outA <- stan_extract(data = TRUE, mcmc = TRUE, model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
+(outA <- stan_extract(model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
 stanSave(outA)
 
-(outB <- stan_extract(data = TRUE, mcmc = TRUE, model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "mse")))
+(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "mse")))
 stanSave(outB)
 
 
