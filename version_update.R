@@ -17,7 +17,7 @@ rm(DESCRIPTION)
 filename <- "R/zzz.R"
 cat(".onAttach <- function(libname, pkgname)\n", file = filename)
 cat("{\n", file = filename, append = TRUE)
-cat(paste("    packageStartupMessage(\"stanUtils beta version ", VERSION, " (", TIME, ")\")\n", sep = ""), file = filename, append = TRUE)
+cat(paste("    packageStartupMessage(\"stanUtils release version ", VERSION, " (", TIME, ")\")\n", sep = ""), file = filename, append = TRUE)
 cat("}\n", file = filename, append = TRUE)
 rm(filename)
 
