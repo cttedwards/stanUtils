@@ -24,7 +24,7 @@ library(stanUtils)
 
 ## Set up
 
-Write the stan model code, data file, initial value file and (if desired) a make file
+Write the stan model code, data file, initial value file.
 
 ```{r}
 # write example models
@@ -45,8 +45,9 @@ rstan::stan_rdump(list = ls(inis), file = "modelB.ini",  envir = list2env(inis))
 dat <- list(N = 100, y = rnorm(100, 10, 1))
 rstan::stan_rdump(list = ls(dat), file = "modelA.dat",  envir = list2env(dat))
 rstan::stan_rdump(list = ls(dat), file = "modelB.dat",  envir = list2env(dat))
+```
 
-# create simple makefile
+```{r echo=FALSE}
 cat("SRC_FILE=$(NAME).stan\n", file = "Makefile")
 cat("MODEL_HOME=C:/Rpackages/stanUtils/vignettes\n", file = "Makefile", append = TRUE)
 cat("CMDSTAN_HOME=C:/cmdstan\n", file = "Makefile", append = TRUE)
@@ -58,6 +59,13 @@ cat("\n", file = "Makefile", append = TRUE)
 cat("mcmc:\n", file = "Makefile", append = TRUE)
 cat("	./$(NAME).exe sample algorithm=hmc num_samples=1000 num_warmup=1000 thin=1 init=$(NAME).ini data file=$(NAME).dat output file=$(NAME)$(chain).mcmc\n", file = "Makefile", append = TRUE)
 cat("	$(RM) .RData\n", file = "Makefile", append = TRUE)
+```
+
+We can also write a make file, for example:
+```{r, echo = FALSE, comment=""}
+# create simple makefile; e.g.
+cat(readLines(con = "Makefile"), sep = "\n")
+
 ```
 
 Build and run the model or models from the command line.

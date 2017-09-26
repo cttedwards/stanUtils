@@ -1,6 +1,6 @@
 Package: stanUtils
-Version: 0.0.0.9053
-Date: 2017-09-21
+Version: 0.0.0.9054
+Date: 2017-09-26
 Description: a collection of functions for running, saving and interrogating
     stan models in R
 VignetteBuilder: knitr
