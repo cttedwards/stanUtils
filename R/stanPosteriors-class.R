@@ -20,6 +20,10 @@ setMethod("initialize", signature = "stanPosteriors", definition = function(.Obj
 #' @export
 setMethod("show", "stanPosteriors",
           function(object) {
-              cat("stanPosterior objects for models:", paste0(names(object), c(rep(',', length(object) - 1), '')))
+              if (length(object) > 1) {
+                cat("stanPosterior object list for models:", paste0(names(object), c(rep(',', length(object) - 1), '')))
+              } else {
+                cat("stanPosterior object list for model:", names(object))
+              }
           }
 )

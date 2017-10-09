@@ -1,6 +1,6 @@
 #'
 #' @title stanPosterior object class
-#' @description Contains MCMC samples from a subset of parameters extracted from an \code{stanOutput} object.
+#' @description Contains MCMC samples from a subset of parameters extracted from a \code{stanOutput} object.
 #'
 #' @export
 setClass("stanPosterior", contains = "list", slots = list(pars = "character", model = "character"))
