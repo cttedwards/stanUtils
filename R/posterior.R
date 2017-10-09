@@ -29,33 +29,20 @@
               }
               
               return(stan.list)
-          }
+}
 #' @rdname posterior
 #' @export
 #  method
-"posterior.character" <- function(models, pars, path = rep(".", length(models)), ...) {
+"posterior.list" <- function(object, pars = names(object), model) {
     
-                if (missing(pars)) {
-                    
-                    stop("must specify pars")
-                     
-                }
-                
-                stan.list <- new("stanPosteriors", pars, models)
-                
-                for (i in 1:length(models)) {
-                  stan.object <- file.path(path[i], paste0(models[i], ".rds"))
-                  if (file.exists(stan.object)) {
-                        stan.model <- readRDS(stan.object)
-                        message("loading model: '", stan.model@model,"'")
-                        stan.list[[stan.model@model]] <- posterior(stan.model, pars)
-                  }
-                }
-                
-                message("done")
-                
-                return(stan.list)
-          }
+    stan.list <- new("stanPosterior", pars, model)
+    
+    for (i in 1:length(pars)) {
+        stan.list[[pars[i]]] <- object[[pars[i]]]
+    }
+    
+    return(stan.list)
+}
 #}}}
 
 
