@@ -93,7 +93,7 @@ A call to `stanSave` will save the `stanOutput` object using `base::saveRDS`, wi
 (outA <- stan_extract(model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
 stanSave(outA)
 
-(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "mse")))
+(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "sigma")))
 stanSave(outB)
 
 ```
@@ -124,14 +124,20 @@ print(outpostA)
 
 ## Interrogate multiple models
 
-The `posterior` function, when provided with a character vector of model names, can also be used to combined outputs from multiple models, possibly in different directories. This is achieved by reading the `*.rds` files created by `stanSave()` directly. In this case the `pars` argument must be specified. These can then also be plotted or printed for model comparison purposes.
+The `posteriors` function, when provided with one or more `stanPosterior` objects, can be used to combine `outputs` from multiple models into a single `stanPosteriors` object, which is useful for model comparison. Only outputs common to all models are retained.
 
 ```{r}
 # examine permutted chains
-(outpostAB <- posterior(models = c("modelA", "modelB"), pars = c("mu")))
-traceplot(outpostAB, pars = c("mu"))
-histplot(outpostAB, pars = c("mu"))
+(outpostAB <- posteriors(outpostA, posterior(outB)))
+traceplot(outpostAB)
+histplot(outpostAB)
 print(outpostAB)
+```
+
+In addition, which may be important for particularly large models, a character vector of model names can also be used to combined outputs from multiple models into a single `stanPosteriors` object. This is achieved by directly reading the `*.rds` files created by `stanSave()`, possibly stored in different directories. In this case the `pars` argument must be specified. These can then also be plotted or printed as before.
+
+```{r}
+(outpostAB <- posteriors(models = c("modelA", "modelB"), pars = c("mu")))
 ```
 
 

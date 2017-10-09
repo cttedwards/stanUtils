@@ -58,7 +58,7 @@ system("make mcmc NAME=modelB chain=2")
 (outA <- stan_extract(model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
 stanSave(outA)
 
-(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "mse")))
+(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "sigma")))
 stanSave(outB)
 
 
@@ -79,10 +79,13 @@ print(outpostA)
 
 ## ------------------------------------------------------------------------
 # examine permutted chains
-(outpostAB <- posterior(models = c("modelA", "modelB"), pars = c("mu")))
-traceplot(outpostAB, pars = c("mu"))
-histplot(outpostAB, pars = c("mu"))
+(outpostAB <- posteriors(outpostA, posterior(outB)))
+traceplot(outpostAB)
+histplot(outpostAB)
 print(outpostAB)
+
+## ------------------------------------------------------------------------
+(outpostAB <- posteriors(models = c("modelA", "modelB"), pars = c("mu")))
 
 ## ---- echo = FALSE, results = 'hide'-------------------------------------
 files <- list.files(pattern = "[.]par");  file.remove(files)
