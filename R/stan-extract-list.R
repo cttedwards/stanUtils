@@ -3,8 +3,8 @@
 #'
 #'
 #' @importMethodsFrom rstan extract
-#'
-#' @exportMethod 
+setGeneric("extract", getGeneric("extract", package = "rstan"))
+#' @export
 setMethod("extract", signature = "list", definition = function(object, pars, permuted = TRUE) {
     
               # Extract the samples in different forms for different parameters. 
