@@ -11,7 +11,7 @@
 #' @rdname cdfplot
 #' @export
 # method
-"cdfplot.stanPosterior" <- function(object, figure_dir = "./") {
+"cdfplot.stanPosterior" <- function(object, pars = names(object), figure_dir = "./") {
     
     dfr <- flatten(object)
     
@@ -26,7 +26,12 @@
 #' @rdname cdfplot
 #' @export
 # method
-"cdfplot.stanPosteriors" <- function(object) {
+"cdfplot.stanPosteriors" <- function(object, pars) {
+    
+    if (missing(pars)) {
+        pars <- lapply(object, function(x) slot(x, 'pars'))
+        pars <- Reduce(intersect, pars)
+    }
     
     dfr <- data.frame()
     for (i in 1:length(object))

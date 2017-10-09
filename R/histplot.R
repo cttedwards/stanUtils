@@ -32,7 +32,10 @@
 # method
 "histplot.stanPosteriors" <- function(object, pars, bins = 20) {
     
-    if (missing(pars)) stop("must specify pars")
+    if (missing(pars)) {
+        pars <- lapply(object, function(x) slot(x, 'pars'))
+        pars <- Reduce(intersect, pars)
+    }
         
     message("plotting comparative model outputs")
     
