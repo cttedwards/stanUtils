@@ -107,7 +107,7 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
 		    parameters <- extract(mcmc, pars = permute_FALSE, permuted = FALSE)
 			
 			dimnames(parameters)[[1]] <- 1:dim(parameters)[1]
-			#if (length(parameters) > 1) dimnames(mcmc)[[2]] <- 1:dim(mcmc)[2]
+			if (length(parameters) > 1) dimnames(mcmc)[[2]] <- 1:dim(mcmc)[2]
 			
 			dS4@mcmc[['parameters']] <- lapply(permute_FALSE, function(x) parameters[,,regexpr(x, dimnames(parameters)[[3]]) > 0])
 			names(dS4@mcmc[['parameters']]) <- permute_FALSE
