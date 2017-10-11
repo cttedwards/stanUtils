@@ -1,13 +1,13 @@
 #'
-#' Print functions for stanPosterior objects
+#' @title Print functions for stanPosterior objects
+#' 
+#' @description Print table of MCMC model estimates as a median plus 95% credibility intervals. 
 #' 
 #' @include stanPosterior-class.R flatten-stanPosterior.R utils.R
 #' @importFrom pander pandoc.table pandoc.table.return Pandoc
 #' @export
 #  method
 "print.stanPosterior" <- function(object, write.to.word = FALSE) {
-    
-    #requireNamespace("pander", quietly = TRUE)
     
     dfr <- flatten(object)
 
@@ -39,8 +39,11 @@
     }
     
     # merge
-    for (i in 1:length(object)) object[[1]] <- merge(object[[1]], object[[i]])
     dfr <- object[[1]]
+    if (length(object) > 1) 
+        for (i in 2:length(object)) 
+            dfr <- merge(dfr, object[[i]], all = TRUE)
+    
         
     #} else {
     #    
@@ -51,7 +54,7 @@
     
     if (write.to.word) {
         
-        tab <- Pandoc$new(paste0('stan models: ', paste(names(out), collapse = ', ')),'Summary outputs')
+        tab <- Pandoc$new(paste0('stan models: ', paste(names(object), collapse = ', ')),'Summary outputs')
         tab$add(pandoc.table.return(dfr, style = 'simple', justify = c('left', rep('right', length(object)))))
         tab$format <- 'docx'
         tab$export('stan_comparative_summary_table')
