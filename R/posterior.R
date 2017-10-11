@@ -12,7 +12,7 @@
 #' @rdname posterior
 #' @export
 #  method
-"posterior.stanOutput" <- function(object, pars = object@outputs) {
+"posterior.stanOutput" <- function(object, pars = object@outputs, model = object@model) {
               
               parnames <- names(object@mcmc[['outputs']])
               
@@ -22,7 +22,7 @@
               if (!(length(pars.in) > 0)) stop("specified pars not contained in model outputs")
               if (length(pars.out) > 0) warning("dropped: ", paste(pars.out, collapse = ', '))
               
-              stan.list <- new("stanPosterior", pars.in, object@model)
+              stan.list <- new("stanPosterior", pars.in, model)
               
               for (i in 1:length(pars.in)) {
                 stan.list[[pars.in[i]]] <- object@mcmc[['outputs']][[pars.in[i]]]
