@@ -46,7 +46,7 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
         
     } else {
     
-        permute_FALSE <- parameters
+        permute_FALSE <- unique(parameters)
     }
     
     if (is.null(outputs)) {
@@ -55,7 +55,7 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
             
     } else {
         
-        permute_TRUE <- outputs
+        permute_TRUE <- unique(outputs)
     }
     
     # initialise object
