@@ -1,5 +1,7 @@
 #'
-#' Extract model fits and load into stanOutput object class
+#' @title Extract model fits and load into \code{stanOutput} object class
+#' 
+#' @description This function will implement the \code{read_stan_mcmc} and \code{extract} functions to produce the primary \code{stanOutput} object class.
 #' 
 #' @param model character string a name or label for the model being extracted
 #' @param data logical read data into object?
@@ -89,6 +91,16 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
 		
 		# create list object containing model outputs
 		if (!is.null(permute_TRUE)) {
+		    
+		    loc <- permute_TRUE %in% mcmc$pars_oi
+		    
+		    if (!all(loc)) {
+		        
+		        if (all(!loc)) stop("no 'outputs' in mcmc files\n") else warning(paste0("deleted [", paste(permute_TRUE[!loc], collapse = ", "), "] from 'outputs'\n"))
+		        
+		        dS4@outputs <- permute_TRUE <- permute_TRUE[loc]    
+		        
+		    }
 			
 		    #outputs_stan <- rstan::extract(mcmc_stan, pars = permute_TRUE, permuted = TRUE, inc_warmup = FALSE)
 		    outputs <- extract(mcmc, pars = permute_TRUE, permuted = TRUE)
@@ -101,14 +113,22 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
 		
 		# extract pars (with chains) for diagnostic plots
 		if (!is.null(permute_FALSE)) {
+		    
+		    loc <- permute_FALSE %in% mcmc$pars_oi
+		    
+		    if (!all(loc)) {
+		        
+		        if (all(!loc)) stop("no 'parameters' in mcmc files\n") else warning(paste0("deleted [", paste(permute_FALSE[!loc], collapse = ", "), "] from 'parameters'\n"))
+		        
+		        dS4@parameters <- permute_FALSE <- permute_FALSE[loc]    
+		    }
 			
 		    #parameters_stan <- rstan::extract(mcmc_stan, pars = permute_FALSE, permuted = FALSE, inc_warmup = FALSE)
 		    
+		    # extract array
 		    parameters <- extract(mcmc, pars = permute_FALSE, permuted = FALSE)
 			
-			dimnames(parameters)[[1]] <- 1:dim(parameters)[1]
-			if (length(mcmcfiles) > 1) dimnames(parameters)[[2]] <- 1:dim(parameters)[2]
-			
+			# convert to list of arrays
 			dS4@mcmc[['parameters']] <- lapply(permute_FALSE, function(x) parameters[,,regexpr(x, dimnames(parameters)[[3]]) > 0])
 			names(dS4@mcmc[['parameters']]) <- permute_FALSE
 		
