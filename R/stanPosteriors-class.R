@@ -1,5 +1,5 @@
 #' 
-#' stanPosteriors object class
+#' @title stanPosteriors object class
 #'
 #' @include stanPosterior-class.R
 #' 
@@ -21,9 +21,9 @@ setMethod("initialize", signature = "stanPosteriors", definition = function(.Obj
 setMethod("show", "stanPosteriors",
           function(object) {
               if (length(object) > 1) {
-                cat("stanPosterior object list for models:", paste0(names(object), c(rep(',', length(object) - 1), '')))
+                message(c("stanPosterior object list for models: ", paste0(names(object), c(rep(', ', length(object) - 1), ''))))
               } else {
-                cat("stanPosterior object list for model:", names(object))
+                message(c("stanPosterior object list for model: ", names(object)))
               }
           }
 )

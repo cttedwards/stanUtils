@@ -1,7 +1,9 @@
 #'
-#' Read MCMC comma delimted files produced by \code{cmdStan}
+#' @title Read MCMC comma delimited files produced by \code{cmdStan}
 #'
-#'
+#' @description This function emmulates the \code{read_stan_csv} in \package{rstan}, but is less strict. Specific differences include the ability to read chains from incomplete runs and to combine chains of different lengths.
+#' 
+#' @param mcmcfiles character vector of the complete path to csv output files produced by \code{cmdStan}
 #'
 #' @export
 read_stan_mcmc <- function(mcmcfiles) {

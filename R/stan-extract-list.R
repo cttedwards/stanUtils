@@ -1,5 +1,11 @@
 #' 
-#' Extract MCMC samples from a list produced by \code{cmdStan}
+#' @title Extract MCMC samples from a list produced by \code{read_stan_mcmc}
+#' 
+#' @description Method for extracting MCMC samples and diagnostic information based on the generic \code{extract} function provided in \package{rstan}. Outputs are in the same format. This method is typically executed within  the \code{stan_extract} function.
+#' 
+#' @param object list object produced by \code{read_stan_mcmc}
+#' @param pars character vector of parameters to be extracted
+#' @param permute should the MCMC sample chains be permuted and combined?
 #'
 #'
 #' @importMethodsFrom rstan extract

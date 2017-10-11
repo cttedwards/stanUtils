@@ -1,8 +1,11 @@
 #'
-#' Extract permuted posterior distributions for selected model outputs
+#' @title Extract permuted posterior distributions for selected model outputs
 #' 
-#' These functions can be used to extract a list of output values from a \code{stanOutput-class} object in the current workspace.
-#' If supplied with a character vector will search for saved \code{*.rds} objects and load them. 
+#' @description These functions can be used to extract a list of output values from a \code{stanOutput-class} object in the current workspace. If supplied with a character vector will search for saved \code{*.rds} objects and load them. 
+#' 
+#' @param object object of appropriate class
+#' @param pars character vector with which to select permuted model outputs contained within target object
+#' @param model model name for tracking purposes
 #' 
 #' @include stanOutput-class.R stanPosterior-class.R stanPosteriors-class.R
 #' 
