@@ -1,5 +1,5 @@
 Package: stanUtils
-Version: 1.1.0.0
+Version: 1.1.0.6
 Date: 2017-10-12
 Description: a collection of functions for running, saving and interrogating
     stan models in R
