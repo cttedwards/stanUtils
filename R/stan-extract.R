@@ -64,7 +64,10 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
     dS4 <- new("stanOutput", model.name = model, parameters = permute_FALSE, outputs = permute_TRUE)
     
     # assign initial values
-    dS4@inits <- rstan::read_rdump(paste0(path, inifile))
+    if (length(inifile) > 0) {
+        
+        dS4@inits <- rstan::read_rdump(paste0(path, inifile))
+    }
     
     # get data	
 	if (length(datfile) > 0) {
