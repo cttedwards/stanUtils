@@ -4,14 +4,15 @@
 #' @description Method for extracting MCMC samples and diagnostic information based on the generic \code{extract} function provided in \package{rstan}. Outputs are in the same format. This method is typically executed within  the \code{stanExtract} function.
 #' 
 #' @param object list object produced by \code{read_stan_mcmc}
-#' @param pars character vector of parameters to be extracted
+#' @param pars character vector of parameters to be extracted (or not)
 #' @param permute should the MCMC sample chains be permuted and combined?
+#' @param include should pars be extracted (TRUE) or everything except the pars (FALSE) 
 #'
 #'
 #' @importMethodsFrom rstan extract
 setGeneric("extract", getGeneric("extract", package = "rstan"))
 #' @export
-setMethod("extract", signature = "list", definition = function(object, pars = "all", permuted = TRUE) {
+setMethod("extract", signature = "list", definition = function(object, pars, permuted = TRUE, include = TRUE) {
     
               # Extract the samples in different forms for different parameters. 
               #
@@ -41,8 +42,8 @@ setMethod("extract", signature = "list", definition = function(object, pars = "a
     
                 #object <- sim
               
-              #if(!include) pars <- setdiff(object@sim$pars_oi, pars)
-              pars <- if (pars == "all") object$pars_oi else pars #check_pars_second(object@sim, pars) 
+              if(!include) pars <- setdiff(object$pars_oi, pars)
+              pars <- if (missing(pars)) object$pars_oi else pars #check_pars_second(object@sim, pars) 
               #pars <- remove_empty_pars(pars, object@sim$dims_oi)
               tidx <- .pars_total_indexes(object$pars_oi, 
                                          object$dims_oi, 
