@@ -55,12 +55,11 @@ system("make mcmc NAME=modelB chain=2")
 
 ## ---- echo = TRUE--------------------------------------------------------
 # extract and save mcmc outputs as *.rds file
-(outA <- stan_extract(model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
+(outA <- stanExtract(preffix = "modelA", parameters = "mu", outputs = c("mu", "mse")))
 stanSave(outA)
 
-(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "sigma")))
+(outB <- stanExtract(preffix = "modelB", parameters = c("mu", "sigma", "delta"), outputs = c("mu", "sigma")))
 stanSave(outB)
-
 
 ## ------------------------------------------------------------------------
 slotNames(outA)

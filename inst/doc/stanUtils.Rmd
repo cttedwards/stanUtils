@@ -84,20 +84,21 @@ system("make mcmc NAME=modelB chain=2")
 
 ## Save model parameters and outputs
 
-For each model, extract the MCMC outputs into a `stanOuput` object using `stan_extract`, specifiying whether to treat the outputs as `parameters` (for which chain identities are retained) or `outputs` (for which the chains are permutted and combined). The specification of `parameters` and `outputs` can overlap, depending on downstream analyses. This flexibility is designed to keep the `stanOutput` object small, particularly for large model applications.
+For each model, extract the MCMC outputs into a `stanOuput` object using `stanExtract`, specifiying whether to treat the outputs as `parameters` (for which chain identities are retained) or `outputs` (for which the chains are permutted and combined). The specification of `parameters` and `outputs` can overlap, depending on downstream analyses. This flexibility is designed to keep the `stanOutput` object small, particularly for large model applications.
 
 A call to `stanSave` will save the `stanOutput` object using `base::saveRDS`, with a file name that matches the model name. 
 
 ```{r, echo = TRUE}
 # extract and save mcmc outputs as *.rds file
-(outA <- stan_extract(model = "modelA", parameters = "mu", outputs = c("mu", "mse")))
+(outA <- stanExtract(preffix = "modelA", parameters = "mu", outputs = c("mu", "mse")))
 stanSave(outA)
 
-(outB <- stan_extract(model = "modelB", parameters = c("mu", "sigma"), outputs = c("mu", "sigma")))
+(outB <- stanExtract(preffix = "modelB", parameters = c("mu", "sigma", "delta"), outputs = c("mu", "sigma")))
 stanSave(outB)
-
 ```
-The `stanOuput` class object contains a variety of slots that are populated during a call to `stan_extract`:
+Note that if redundant `parameters` or `outputs` are included, in this example the fictitious `delta` parameter, they are rejected with a warning.
+
+The `stanOuput` class object contains a variety of slots that are populated during a call to `stanExtract`:
 ```{r}
 slotNames(outA)
 ```
@@ -133,12 +134,14 @@ traceplot(outpostAB)
 histplot(outpostAB)
 print(outpostAB)
 ```
+Note that for comparative trace and histogram plots, only common outputs are plotted, but when printing all outputs are included. 
 
 In addition, which may be important for particularly large models, a character vector of model names can also be used to combined outputs from multiple models into a single `stanPosteriors` object. This is achieved by directly reading the `*.rds` files created by `stanSave()`, possibly stored in different directories. In this case the `pars` argument must be specified. These can then also be plotted or printed as before.
 
 ```{r}
 (outpostAB <- posteriors(models = c("modelA", "modelB"), pars = c("mu")))
 ```
+
 
 
 ```{r, echo = FALSE, results = 'hide'}
