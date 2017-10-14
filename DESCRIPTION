@@ -1,6 +1,6 @@
 Package: stanUtils
-Version: 1.1.0.6
-Date: 2017-10-12
+Version: 1.1.0.10
+Date: 2017-10-14
 Description: a collection of functions for running, saving and interrogating
     stan models in R
 VignetteBuilder: knitr
@@ -20,6 +20,7 @@ Collate:
     'stanOutput-class.R'
     'cdfplot.R'
     'densityplot.R'
+    'extract-list.R'
     'histplot.R'
     'stanPosteriors-class.R'
     'posterior.R'
@@ -28,9 +29,8 @@ Collate:
     'print-stanPosterior.R'
     'read-stan-map.R'
     'read-stan-mcmc.R'
-    'stan-extract-list.R'
-    'stan-extract.R'
     'stan-restart.R'
+    'stanExtract.R'
     'stanSave.R'
     'traceplot.R'
     'zzz.R'
