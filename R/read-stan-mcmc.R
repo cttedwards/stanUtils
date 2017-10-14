@@ -3,6 +3,8 @@
 #'
 #' @description This function emmulates the \code{read_stan_csv} in \package{rstan}, but is less strict. Specific differences include the ability to read chains from incomplete runs and to combine chains of different lengths.
 #' 
+#' @return Returns a list obejct with content equivalent to the \code{object@sim} slot of a \code{stanfit} object from \code{rstan}.
+#' 
 #' @param mcmcfiles character vector of the complete path to csv output files produced by \code{cmdStan}
 #'
 #' @export

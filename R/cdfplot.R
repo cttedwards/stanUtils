@@ -33,6 +33,8 @@
         pars <- Reduce(intersect, pars)
     }
     
+    message("plotting common model outputs")
+    
     dfr <- data.frame()
     for (i in 1:length(object))
         dfr <- rbind(dfr, data.frame(flatten(object[[i]]), model = names(object)[i]))

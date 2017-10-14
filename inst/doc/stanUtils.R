@@ -53,7 +53,7 @@ system("make mcmc NAME=modelA chain=2")
 system("make mcmc NAME=modelB chain=1")
 system("make mcmc NAME=modelB chain=2")
 
-## ---- echo = TRUE--------------------------------------------------------
+## ---- echo = TRUE, warning = TRUE----------------------------------------
 # extract and save mcmc outputs as *.rds file
 (outA <- stanExtract(preffix = "modelA", parameters = "mu", outputs = c("mu", "mse")))
 stanSave(outA)
@@ -78,7 +78,7 @@ print(outpostA)
 
 ## ------------------------------------------------------------------------
 # examine permutted chains
-(outpostAB <- posteriors(outpostA, posterior(outB)))
+(outpostAB <- posteriors(outpostA, posterior(outB), trim = FALSE))
 traceplot(outpostAB)
 histplot(outpostAB)
 print(outpostAB)

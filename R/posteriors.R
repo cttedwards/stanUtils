@@ -1,4 +1,7 @@
 #'
+#'
+#' @param trim logical indicating with un-common outputs should be trimmed (removed)
+#' 
 #' @include stanOutput-class.R stanPosterior-class.R stanPosteriors-class.R posterior.R
 #' 
 #' @export
@@ -7,7 +10,7 @@
 #' @rdname posterior
 #' @export
 #  method
-"posteriors.stanPosterior" <- function(object, ...) {
+"posteriors.stanPosterior" <- function(object, ..., trim = TRUE) {
     
     object.list <- list(object, ...)
     
@@ -19,18 +22,10 @@
         
     pars.common <- Reduce(intersect, pars)
     
-    for (i in 1:length(object.list))
-        stan.list[[i]] <- posterior(object.list[[i]], pars = pars.common, model = model.names[i])
-    
-    #if (common.pars) {
-    #    
-    #    pars.list <- lapply(stan.list, function(x) slot(x, 'pars'))
-    #    
-    #    pars.list.common <- Reduce(intersect, pars.list)
-    #    
-    #    stan.list <- lapply(stan.list, "[", pars.list.common)
-    #
-    #}
+    for (i in 1:length(object.list)) {
+        if (trim) stan.list[[i]] <- posterior(object.list[[i]], pars = pars.common, model = model.names[i])
+        else stan.list[[i]] <- posterior(object.list[[i]], pars = pars[[i]], model = model.names[i])
+    }
     
     return(stan.list)
 }

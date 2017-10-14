@@ -57,7 +57,7 @@
 		pars <- Reduce(intersect, pars)
 	}
     
-    message("plotting comparative model outputs")
+    message("plotting common model outputs")
     
     dfr <- data.frame()
     for (i in 1:length(object))
