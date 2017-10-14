@@ -6,7 +6,7 @@
 #' @export
 .quantile <- function(x, dp = 2) {
     
-    y <- quantile(x, c(0.5, 0.025, 0.975))
+    y <- quantile(x, c(0.5, 0.05, 0.95))
     
     if(y[1] < 10) z <- signif(y, 3) else z <- round(y, dp)
     
