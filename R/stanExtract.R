@@ -3,29 +3,27 @@
 #' 
 #' @description This function will implement the \code{read_stan_mcmc} and \code{extract} functions to produce the primary \code{stanOutput} object class.
 #' 
-#' @param model character string a name or label for the model being extracted
+#' @param preffix character string giving a name or label for the model files being extracted
 #' @param data logical read data into object?
 #' @param mcmc logical read mcmc chains into object?
 #' @param parameters character vector model parameters are extracted as separate chains for diagnostic purposes
 #' @param outputs character vector model outputs are extracted as a single permuted posterior sample (i.e. with chains combined) 
 #' 
-#' @include stanOutput-class.R read-stan-mcmc.R stan-extract-list.R
+#' @include stanOutput-class.R read-stan-mcmc.R extract-list.R
 #' #@importFrom rstan extract read_stan_csv
 #' #@importClassesFrom rstan stanfit
 #' @export
 #'
-stan_extract <- function(parameters = NULL, outputs = NULL, model = character(), path = "./")
+stanExtract <- function(preffix = character(), parameters = NULL, outputs = NULL, path = "./")
 {
-    #current.dir <- getwd()
-    #setwd(path)
-	
+
 	# check that path ends with "/"
 	stopifnot(identical(unlist(strsplit(path, ""))[nchar(path)], "/"))
     
     # get file names
-	inifile   <- list.files(path, pattern = "[.]ini")[grepl(model, list.files(path, pattern = "[.]ini"))]
-	datfile   <- list.files(path, pattern = "[.]dat")[grepl(model, list.files(path, pattern = "[.]dat"))]
-	mcmcfiles <- list.files(path, pattern = "[.]mcmc")[grepl(model, list.files(path, pattern = "[.]mcmc"))]
+	inifile   <- list.files(path, pattern = "[.]ini")[grepl(preffix, list.files(path, pattern = "[.]ini"))]
+	datfile   <- list.files(path, pattern = "[.]dat")[grepl(preffix, list.files(path, pattern = "[.]dat"))]
+	mcmcfiles <- list.files(path, pattern = "[.]mcmc")[grepl(preffix, list.files(path, pattern = "[.]mcmc"))]
 
 	# if no parameters specified get complete list from .ini file
     if (is.null(parameters)) {
@@ -34,7 +32,7 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
 		
 			if (length(inifile) > 1) {
 			
-				stop("model name specifies >1 model\n") 
+				stop("preffix name specifies >1 model\n") 
 				
 			} else {
             
@@ -61,7 +59,7 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
     }
     
     # initialise object
-    dS4 <- new("stanOutput", model.name = model, parameters = permute_FALSE, outputs = permute_TRUE)
+    dS4 <- new("stanOutput", model.name = preffix, parameters = permute_FALSE, outputs = permute_TRUE)
     
     # assign initial values
     if (length(inifile) > 0) {
@@ -74,7 +72,7 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
 	
 		if (length(datfile) > 1) {
 		
-			stop("model name specifies >1 model\n") 
+			stop("preffix name specifies >1 model\n") 
 			
 		} else {
 		
@@ -138,8 +136,6 @@ stan_extract <- function(parameters = NULL, outputs = NULL, model = character(),
 		}
 		
 	} else warning("no 'mcmc' files")
-    
-    #setwd(current.dir)
     
     return(dS4)
 }
