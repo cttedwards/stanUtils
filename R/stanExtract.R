@@ -24,6 +24,8 @@ stanExtract <- function(preffix = character(), parameters = NULL, outputs = NULL
 	inifile   <- list.files(path, pattern = "[.]ini")[grepl(preffix, list.files(path, pattern = "[.]ini"))]
 	datfile   <- list.files(path, pattern = "[.]dat")[grepl(preffix, list.files(path, pattern = "[.]dat"))]
 	mcmcfiles <- list.files(path, pattern = "[.]mcmc")[grepl(preffix, list.files(path, pattern = "[.]mcmc"))]
+	#mcmcfiles <- unlist(lapply(strsplit(list.files(path, pattern = "[.]mcmc"), split = ".", fixed = TRUE), function(x) x[1]))
+	#mcmcfiles <- paste0(mcmcfiles[grepl(preffix, mcmcfiles)], ".mcmc")
 
 	# if no parameters specified get complete list from .ini file
     if (is.null(parameters)) {
@@ -36,7 +38,7 @@ stanExtract <- function(preffix = character(), parameters = NULL, outputs = NULL
 				
 			} else {
             
-				permute_FALSE <- names(rstan::read_rdump(paste0(path, inifile)))
+				permute_FALSE <- c(names(rstan::read_rdump(paste0(path, inifile))), "lp__")
 			}
             
         } else {
@@ -64,7 +66,15 @@ stanExtract <- function(preffix = character(), parameters = NULL, outputs = NULL
     # assign initial values
     if (length(inifile) > 0) {
         
-        dS4@inits <- rstan::read_rdump(paste0(path, inifile))
+        if (length(inifile) > 1) {
+            
+            stop("preffix name specifies >1 model\n") 
+            
+        } else {
+            
+            dS4@inits <- rstan::read_rdump(paste0(path, inifile))
+        
+        }
     }
     
     # get data	
